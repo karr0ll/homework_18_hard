@@ -8,6 +8,7 @@ from setup_db import db
 def create_data():
     """создает и наполняет БД"""
     with db.session.begin():
+        db.drop_all()
         db.create_all()
 
     for movie in data["movies"]:
