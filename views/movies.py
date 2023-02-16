@@ -2,7 +2,7 @@ from flask_restx import Resource, Namespace
 from flask import request
 
 from dao.models.movie import movies_schema, movie_schema
-from container import movie_service
+from container import movie_service, genre_service
 
 movies_ns = Namespace("movies")
 
@@ -22,6 +22,7 @@ class MoviesView(Resource):
         добавляет новый фильм
         """
         request_json = request.json
+        genre_service.check_and_add_genres(request_json)
         movie_service.create(request_json)
         return "", 201, {'location': 'sqlite:///movies.db'}
 
