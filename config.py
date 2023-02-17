@@ -1,5 +1,5 @@
 # файл конфигурации приложения
-class Config(object):
+class Config:
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///movies.db'
 
