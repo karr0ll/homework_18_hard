@@ -1,5 +1,6 @@
 from dao.models.movie import Movie
 
+
 # DAO для работы с сущностью Movie
 
 class MovieDAO:
@@ -41,11 +42,18 @@ class MovieDAO:
         movie = self.session.query(Movie).filter(Movie.year == year)
         return movie
 
-    def create(self, data):
+    def create(self, id_, title, description, trailer, year, rating, genre_id, director_id):
         """
         создает новый фильм
         """
-        movie = Movie(**data)
+        movie = Movie(id=id_,
+                      title=title,
+                      description=description,
+                      trailer=trailer,
+                      year=year,
+                      rating=rating,
+                      genre_id=genre_id,
+                      director_id=director_id)
         self.session.add(movie)
         self.session.commit()
 
@@ -67,4 +75,3 @@ class MovieDAO:
         movie = self.get_one(mid)
         self.session.delete(movie)
         self.session.commit()
-
