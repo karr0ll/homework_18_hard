@@ -1,4 +1,6 @@
 from dao.models.director import Director
+from sqlalchemy import func
+
 
 # DAO для работы с сущностью Director
 
@@ -22,3 +24,28 @@ class DirectorDAO:
 
         return director
 
+    def get_director(self, data):
+        """
+        загружает id жанра
+        """
+        director = self.session.query(Director).filter(Director.name == data)
+        return director
+
+    def get_max_id(self):
+        """
+        получает последний id
+        """
+        max_id = self.session.query(Director, func.max(Director.id)).one()
+
+        return max_id
+
+    def create(self, director_id, director_name):
+        """
+        создает нового режиссера
+        """
+        new_genre = Director(
+            id=director_id,
+            name=director_name
+        )
+        self.session.add(new_genre)
+        self.session.commit()
