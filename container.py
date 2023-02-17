@@ -8,12 +8,13 @@ from setup_db import db
 
 # контейнер для связи сервисов и DAO
 
-
-movie_dao = MovieDAO(db.session)
-movie_service = MovieService(movie_dao)
-
 genre_dao = GenreDAO(db.session)
 genre_service = GenreService(genre_dao)
 
 director_dao = DirectorDAO(db.session)
 director_service = DirectorService(director_dao)
+
+movie_dao = MovieDAO(db.session)
+movie_service = MovieService(movie_dao, genre_dao, director_dao)
+
+
