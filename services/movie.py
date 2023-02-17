@@ -1,17 +1,39 @@
+from dao.director import DirectorDAO
 from dao.movie import MovieDAO
+from dao.genre import GenreDAO
 from flask import request
+
 
 # сервисы для работы с сущностью Movie
 
 class MovieService:
-    def __init__(self, dao: MovieDAO):
+    def __init__(self, dao: MovieDAO, genre_dao: GenreDAO, director_dao: DirectorDAO):
         self.dao = dao
+        self.genre_dao = genre_dao
+        self.director_dao = director_dao
 
     def create(self, data):
         """
         реализует логику внесния в БД данных о новом фильме
+        (принимаются строчные значения жанра и режиссера)
         """
-        return self.dao.create(data)
+
+        requested_genre = self.genre_dao.get_genre(data.get("genre"))
+        requested_director = self.director_dao.get_director(data.get("director"))
+
+        genre_id = [requested_genre.id for requested_genre in requested_genre]
+        director_id = [requested_director.id for requested_director in requested_director]
+
+        id_ = data.get("id")
+        title = data.get("title")
+        description = data.get("description")
+        trailer = data.get("trailer")
+        year = data.get("year")
+        rating = data.get("rating")
+        genre_id = genre_id[0]
+        director_id = director_id[0]
+
+        return self.dao.create(id_, title, description, trailer, year, rating, genre_id, director_id)
 
     def get_one(self, mid):
         """
@@ -42,32 +64,29 @@ class MovieService:
     def update(self, data):
         """
         реализует логику обновления данных об одном фильме по его id
+        (принимаются строчные значения жанра и режиссера)
         """
         mid = data.get("id")
         movie = self.get_one(mid)
+
+        requested_genre = self.genre_dao.get_genre(data.get("genre"))
+        requested_director = self.director_dao.get_director(data.get("director"))
+
+        genre_id = [requested_genre.id for requested_genre in requested_genre]
+        director_id = [requested_director.id for requested_director in requested_director]
 
         movie.id = mid
         movie.title = data.get("title")
         movie.description = data.get("description")
         movie.trailer = data.get("trailer")
         movie.rating = data.get("rating")
-        movie.genre_id = data.get("genre_id")
-        movie.director_id = data.get("director_id")
+        movie.genre_id = genre_id[0]
+        movie.director_id = director_id[0]
 
-        self.dao.update(movie)
+        return self.dao.update(movie)
 
     def delete(self, aid):
         """
         реализует логику удаления данных об одном фильме по его id
         """
         return self.dao.delete(aid)
-
-
-
-
-
-
-
-
-
-
