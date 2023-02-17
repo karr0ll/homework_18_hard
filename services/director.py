@@ -19,5 +19,21 @@ class DirectorService:
         return self.dao.get_all()
 
 
+    def check_and_add_director(self, data):
+        """
+        проверяет наличие режиссера в таблице
+        добавляет нового режиссера, если его нет в таблицe
+        """
+        all_directors = self.dao.get_all()
+        director_name = data.get("director")
+
+        all_director_response = []
+        for item in all_directors:
+            all_director_response.append(item.name)
+
+        if director_name not in all_director_response:  # if str not in list
+            director_max_id = self.dao.get_max_id()
+            director_id = director_max_id[1] + 1
+            return self.dao.create(director_id, director_name)
 
 
