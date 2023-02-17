@@ -21,23 +21,20 @@ class GenreService:
         """
         return self.dao.get_all()
 
-    def check_and_add_genres(self, data):
+    def check_and_add_genre(self, data):
         """
         проверяет наличие жанра в таблице
         добавляет новый жанр, если его нет в таблицe
         """
         all_genres = self.dao.get_all()
-        requested_genre = data.get("genre")
+        genre_name = data.get("genre")  # -> str Жанр
 
-        all_genres_response = []
+        all_genres_response = []  # -> list of genres
         for item in all_genres:
             all_genres_response.append(item.name)
 
-        if requested_genre not in all_genres_response:
+        if genre_name not in all_genres_response:  # if str not in list
             genre_max_id = self.dao.get_max_id()
-            requested_genre.id = genre_max_id[1] + 1,
-            requested_genre.name = requested_genre.get("name")
-
-            return self.dao.create(requested_genre)
-
+            genre_id = genre_max_id[1] + 1
+            return self.dao.create(genre_id, genre_name)
 
